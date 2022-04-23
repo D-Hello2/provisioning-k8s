@@ -72,7 +72,7 @@ echo ""
 
 echo "########### Install Docker and configure docker ###########"
 echo ""
-sudo apt install docker-compose
+sudo apt install docker-compose -y
 sudo mkdir -p /etc/systemd/system/docker.service.d
 sudo tee /etc/docker/daemon.json <<EOF
 {

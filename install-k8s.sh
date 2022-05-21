@@ -20,6 +20,31 @@ else
   echo "please input yes/no"
 fi
 
+echo "########### Install Docker and configure docker ###########"
+echo ""
+sudo apt install docker-compose -y
+sudo mkdir -p /etc/systemd/system/docker.service.d
+sudo tee /etc/docker/daemon.json <<EOF
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
+echo "########### done ###########"
+echo ""
+
+echo "########### restart service docker ###########"
+echo ""
+sudo systemctl daemon-reload 
+sudo systemctl restart docker
+sudo systemctl enable docker
+echo "########### done ###########"
+echo ""
+
 echo "########### add key and repo k8s ###########"
 echo ""
 sudo apt -y install curl apt-transport-https
@@ -70,29 +95,24 @@ sudo sysctl --system
 echo "########### done ###########"
 echo ""
 
-echo "########### Install Docker and configure docker ###########"
+echo "########### Initialize Master  ###########"
 echo ""
-sudo apt install docker-compose -y
-sudo mkdir -p /etc/systemd/system/docker.service.d
-sudo tee /etc/docker/daemon.json <<EOF
-{
-  "exec-opts": ["native.cgroupdriver=systemd"],
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "100m"
-  },
-  "storage-driver": "overlay2"
-}
-EOF
+sudo kubeadm init --pod-network-cidr=10.244.1.0/16
 echo "########### done ###########"
 echo ""
 
-echo "########### restart service docker ###########"
+echo "########### Copy admin configuration ###########"
 echo ""
-sudo systemctl daemon-reload 
-sudo systemctl restart docker
-sudo systemctl enable docker
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 echo "########### done ###########"
 echo ""
 
-
+echo "########### Install POD Network Flannel ###########"
+echo ""
+wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+kubectl apply -f kube-flannel.yml
+kubectl get pods --all-namespaces --watch
+echo "########### done ###########"
+echo ""

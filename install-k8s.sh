@@ -61,6 +61,13 @@ echo ""
 echo "########### done ###########"
 echo ""
 
+echo "########### Enable bash completion for both ###########"
+echo ""
+sudo kubeadm completion bash > /etc/bash_completion.d/kubeadm
+kubectl completion bash > /etc/bash_completion.d/kubectl
+echo "########### done ###########"
+echo ""
+
 echo " Your k8s package was installed, please check with kubectl tool if k8s work properly "
 sleep 5
 
@@ -113,6 +120,5 @@ echo "########### Install POD Network Flannel ###########"
 echo ""
 wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 kubectl apply -f kube-flannel.yml
-kubectl get pods --all-namespaces --watch
 echo "########### done ###########"
 echo ""

@@ -63,8 +63,8 @@ echo ""
 
 echo "########### Enable bash completion for both ###########"
 echo ""
-sudo kubeadm completion bash > /etc/bash_completion.d/kubeadm
-kubectl completion bash > /etc/bash_completion.d/kubectl
+kubeadm completion bash | sudo tee /etc/bash_completion.d/kubeadm
+kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl
 echo "########### done ###########"
 echo ""
 
@@ -122,3 +122,5 @@ wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-
 kubectl apply -f kube-flannel.yml
 echo "########### done ###########"
 echo ""
+
+exec bash

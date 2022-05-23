@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "This script was created by danidwiaryaputra for learning purposes, this script will install required package for k8s node master or node worker, please enjoy!"
+echo "This script was created by danidwiaryaputra for learning purposes, this script will install required package for k8s node master, please enjoy!"
 sleep 5
 
 read -p  "Do you want to update your System (yes/no)? " update
